@@ -79,7 +79,7 @@ def mostraImagens(original, filtrada):
     plt.show()
 
 def main():
-    image = cv2.imread("./UFPel_SistSin/CONVOLUCAO/imgs/dogguinho.jpg")
+    image = cv2.imread("./CONVOLUCAO/imgs/dogguinho.jpg")
 
     if image is None:
         print("Erro ao carregar imagem")
