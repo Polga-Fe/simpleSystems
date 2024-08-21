@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.frota.cadastroPage">
+    <children>
+        <Label fx:id="label" text="CADASTRO DE NOVOS CAMINHÕES" textAlignment="CENTER" />
+        <VBox spacing="10">
+            <Label text="TIPO:"/>
+            <ToggleButton fx:id="plataforma" text="PLATAFORMA"/>
+            <ToggleButton fx:id="cegonha" text="CEGONHA"/>
+        </VBox>
+        <VBox spacing="10">
+            <Label text="MARCA:"/>
+            <TextField fx:id="marcaText"/>
+        </VBox>
+        <VBox spacing="10">
+            <Label text="ANO DO VEÍCULO:"/>
+            <TextField fx:id="anoText"/>
+        </VBox>
+        <VBox spacing="10">
+            <Label text="VALOR:"/>
+            <TextField fx:id="valorText"/>
+        </VBox>
+        <VBox spacing="10" fx:id="carroceriaVBox">
+            <Label text="CARROCERIA (metros):"/>
+            <TextField fx:id="carroceriaText"/>
+        </VBox>
+        <VBox spacing="10" fx:id="cargaVBox">
+            <Label text="CARGA (máximo de automóveis):"/>
+            <TextField fx:id="cargaText"/>
+        </VBox>
+        <Button mnemonicParsing="false" onAction="#cadastroCaminhoes" text="Cadastrar Caminhão" />
+        <Button mnemonicParsing="false" onAction="#switchToMenu" text="Voltar ao Menu" />
+    </children>
+    <padding>
+        <Insets top="50" bottom="50" right="50" left="50"/>
+    </padding>
+</VBox>
