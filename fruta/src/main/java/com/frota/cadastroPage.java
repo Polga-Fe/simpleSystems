@@ -92,7 +92,7 @@ public class cadastroPage {
                 // Inserir os dados no banco de dados
                 insertTruckData(tipoCaminhao, marca, ano, valor, carroceria, carga);
             } catch (NumberFormatException e) {
-                System.out.println("Ano ou valor inválido. Por favor, insira números válidos.");
+                System.out.println("Dados inválidos. Por favor, insira valores válidos.");
             }
         } else {
             System.out.println("Nenhum tipo de caminhão foi selecionado.");
