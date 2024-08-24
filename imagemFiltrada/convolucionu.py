@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
 import numpy as np
 import cv2
 
 # DIMENSÕES DA IMAGEM
 def recebeImagem(image):
-    # Altura, largura, canais de cor
     alt, base, canaisCor = image.shape
     print("Dimensões:\nAltura: ", alt, "\tLargura: ", base)
     print("Canais de cor: ", canaisCor)
@@ -33,9 +33,7 @@ def convolucao(image, kernel):
     for c in range(canaisCor):
         for y in range(alt):
             for x in range(base):
-                # Extrair a região da imagem correspondente ao kernel
                 region = padded_image[y:y + kernel_height, x:x + kernel_width, c]
-                # Aplicar o kernel na região
                 output[y, x, c] = np.sum(region * kernel)
     return np.clip(output, 0, 255).astype(np.uint8)
 
@@ -44,12 +42,10 @@ def convolucao_1d(signal, kernel):
     signal_length = len(signal)
     kernel_length = len(kernel)
     output = np.zeros(signal_length + kernel_length - 1)
-
     for i in range(len(output)):
         for j in range(kernel_length):
             if 0 <= i - j < signal_length:
                 output[i] += signal[i - j] * kernel[j]
-
     return output
 
 # DEFINIR KERNEL 2D
@@ -60,9 +56,9 @@ def definir_kernel():
     op = int(input("opção: "))
 
     if op == 1:
-        ker  =  np.array([  [1, 1, 1],
-                            [1, 1, 1],
-                            [1, 1, 1]])
+        ker = np.array([[1, 1, 1],
+                        [1, 1, 1],
+                        [1, 1, 1]])
         ker = (1/9)*ker
     elif op == 2:
         ker = np.array([[-1, -1, -1],
@@ -75,9 +71,7 @@ def definir_kernel():
     return ker
 
 def mostraImagens(original, filtrada):
-    # Exibir as duas imagens lado a lado
     plt.figure(figsize=(10, 5))
-
     plt.subplot(1, 2, 1)
     plt.imshow(cv2.cvtColor(original, cv2.COLOR_BGR2RGB))
     plt.title("Imagem Original")
@@ -106,6 +100,17 @@ def histograma(sinal_original, sinal_convoluido, kernel_1d):
     plt.tight_layout()
     plt.show()
 
+# Função para atualizar o gráfico
+def update(val):
+    a = slider.val  # Acessar o valor do slider
+    kernel_1d = impulso(a, 10)
+    sinal_convoluido = convolucao_1d(sinal_original, kernel_1d)
+    line_kernel.set_ydata(kernel_1d)
+    line_convolucao.set_ydata(sinal_convoluido)
+    ax.relim()
+    ax.autoscale_view()
+    fig.canvas.draw_idle()
+
 def main():
     # Parte 1: Convolução 2D
     image = cv2.imread("./imgs/dogguinho.jpg")
@@ -127,14 +132,40 @@ def main():
     mostraImagens(image, image_filtrada)
 
     # Parte 2: Convolução 1D e Histogramas
+    global sinal_original
     sinal_original = np.random.normal(0, 1, 100)
 
-    a = float(input("Insira o valor de 'a' para a função impulso (entre 0 e 1): "))
+    # Criar o gráfico inicial
+    global fig, ax, line_kernel, line_convolucao, slider
+    fig, ax = plt.subplots(figsize=(10, 5))
+    plt.subplots_adjust(left=0.1, bottom=0.25)
 
-    kernel_1d = impulso(a, 10)
+    # Inicializar valores
+    a_initial = 0.5
+    kernel_1d = impulso(a_initial, 10)
     sinal_convoluido = convolucao_1d(sinal_original, kernel_1d)
 
-    histograma(sinal_original, sinal_convoluido, kernel_1d)
+    # Plotar sinais
+    ax.plot(sinal_original, linestyle='-', marker='o', color='blue', label='Sinal Original')
+    line_kernel, = ax.plot(kernel_1d, linestyle='-', marker='x', color='green', label='Kernel (Impulso)')
+    line_convolucao, = ax.plot(sinal_convoluido, linestyle='-', marker='s', color='red', label='Sinal Convoluído')
+
+    # Configurar o gráfico
+    ax.set_title("Sobreposição de Sinal Original, Kernel e Sinal Convoluído")
+    ax.set_xlabel("Índice")
+    ax.set_ylabel("Amplitude")
+    ax.grid(True)
+    ax.legend()
+
+    # Adicionar slider para controlar `a`
+    ax_slider = plt.axes([0.1, 0.1, 0.65, 0.03], facecolor='lightgoldenrodyellow')
+    slider = Slider(ax_slider, 'a', 0.01, 1.0, valinit=a_initial)
+
+    # Adicionar evento de atualização
+    slider.on_changed(update)
+
+    plt.show()
 
 if __name__ == "__main__":
     main()
+
