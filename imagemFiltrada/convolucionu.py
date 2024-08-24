@@ -113,7 +113,7 @@ def update(val):
 
 def main():
     # Parte 1: Convolução 2D
-    image = cv2.imread("./imgs/dogguinho.jpg")
+    image = cv2.imread("./arquivos/dogguinho.jpg")
 
     if image is None:
         print("Erro ao carregar imagem")
